@@ -32,6 +32,25 @@ app.set('view engine', 'ejs')
 var port = process.env.PORT || 5000
 var uristring = null;
 
+// {
+//   "mongodb": [{
+//    "name": "foo-mongo-db",
+//    "label": "mongodb-2.4",
+//    "tags": [],
+//    "plan": "free",
+//    "credentials": {
+//      "hostname": "10.1.1.18",
+//      "host": "10.1.1.18",
+//      "port": 15006,
+//      "username": "6a28f7fa-e6d9-420a-b38f-98b48874a729",
+//      "password": "93c30191-5ef3-4c6c-a1bf-f571f7700d04",
+//      "name": "b6b23f4c-b485-4d0c-a16b-1d55a3f9bad6",
+//      "db": "db",
+//      "uri": "mongodb://192.168.99.100/twiliodb"
+//    }
+//  }]
+// }
+
 if(process.env.VCAP_SERVICES == null) {
    uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || process.env.MONGO_LOCAL_URL || 'mongodb://localhost/test'
 } else {
