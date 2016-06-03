@@ -3,13 +3,13 @@ var path = require('path')
 
 if (env == 'dev') {
   require('dotenv').load()
-  var twiMLUrl = "http://47c0032f.ngrok.io/twilioVoice"
+  var twiMLUrl = "http://26a8a2f3.ngrok.io/twilioVoice"
 } else {
   // var twiMLUrl = path.join(__dirname, 'twilioVoice')
-  var twiMLUrl = "https://callcenteranalytics.herokuapp.com/twilioVoice"
+  var twiMLUrl = "https://callcenteranalytics.stacka.to/twilioVoice"
 }
 
-debugger
+//debugger
 var express = require('express')
 var app = express()
 var bodyParser = require('body-parser')
@@ -30,7 +30,26 @@ app.set('view engine', 'ejs')
 // })
 
 var port = process.env.PORT || 5000
-var uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/test'
+var uristring = null;
+
+if(process.env.VCAP_SERVICES == null) {
+   uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || process.env.MONGO_LOCAL_URL || 'mongodb://localhost/test'
+} else {
+  console.log(process.env.VCAP_SERVICES);
+  var services = JSON.parse(process.env.VCAP_SERVICES);
+  if (services) {
+   if (services["mongodb"]) {
+     services["mongodb"].forEach(function (entry) {
+         if (entry.name === (process.env.STACKATO_APP_NAME + "-mongo-db")) {
+           uristring = entry.credentials.uri
+
+         }
+     });
+   }
+  }
+}
+
+
 
 var havenondemand = require('havenondemand')
 var hodClient = new havenondemand.HODClient(process.env.HOD_APIKEY)
@@ -103,7 +122,7 @@ app.get('/about', function(req, res) {
 })
 
 app.post('/search', function(req, res) {
-  debugger
+  //debugger
   var searchText = req.body.search
   var data = {text: searchText, index: process.env.HOD_INDEX_NAME, print: 'all'}
   hodClient.call('querytextindex', data, function(err, resp, body) {
@@ -112,7 +131,7 @@ app.post('/search', function(req, res) {
         if (resp.body.status == 'failed') {
           var documents = []
         } else {
-          debugger
+          //debugger
           var documents = resp.body.documents
         }
         res.render('search_results', {
@@ -124,13 +143,13 @@ app.post('/search', function(req, res) {
 })
 
 app.get('/findSimilar', function(req, res) {
-  debugger
+  //debugger
   var indexReference = req.query.indexReference
   var data = {index_reference: indexReference, indexes: process.env.HOD_INDEX_NAME, print: 'all'}
   hodClient.call('findsimilar', data, function(err, resp, body) {
     if (resp) {
       if (resp.body) {
-        debugger
+        //debugger
         var documents = resp.body.documents
         res.render('find_similar_results', {
           calls: documents
@@ -178,7 +197,7 @@ function obtainAudio(CallSid) {
           if (data.recordings.length > 0) { //if there is a recording
             console.log(data.recordings)
             data.recordings.forEach(function(recording) {
-              debugger
+              //debugger
               var recordingUrl = "https://api.twilio.com"+recording.uri.split(".")[0]+".mp3"
               Call.update({'CallSid': CallSid}, {
                 audio: true,
@@ -198,7 +217,7 @@ function obtainAudio(CallSid) {
 }
 
 app.get('/processCall', function(req, res) {
-  debugger
+  //debugger
   var CallSid = req.query.CallSid
   var language = req.query.language
   var entityType = req.query.entity_type
