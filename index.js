@@ -3,7 +3,7 @@ var path = require('path')
 
 if (env == 'dev') {
   require('dotenv').load()
-  var twiMLUrl = "http://26a8a2f3.ngrok.io/twilioVoice"
+  var twiMLUrl = "http://26e51564.ngrok.io/twilioVoice"
 } else {
   // var twiMLUrl = path.join(__dirname, 'twilioVoice')
   var twiMLUrl = "https://callcenteranalytics.stacka.to/twilioVoice"
@@ -12,10 +12,15 @@ if (env == 'dev') {
 //debugger
 var express = require('express')
 var app = express()
+var http = require('http').Server(app);
+
 var bodyParser = require('body-parser')
 var urlencoded = bodyParser.urlencoded({extended: false})
 var mongoose = require('mongoose')
 var async = require('async')
+// BUGFIX: send alert to client when we have obtained a recording
+//var socket = require('socket.io')(http);
+
 
 app.use(urlencoded)
 app.use(express.static(path.join(__dirname, 'public')))
@@ -224,6 +229,9 @@ function obtainAudio(CallSid) {
                 dateCreated: dateCreated
               }, function(err, numberAffected, rawResponse) {
                 console.log("Audio file obtained for: " + CallSid)
+
+                // BUGFIX: send alert to client when we have obtained a recording
+                // socket.emit('onComplete',{action:"audioObtained"});
               })
             })
           } else {
@@ -234,6 +242,7 @@ function obtainAudio(CallSid) {
     }
   })
 }
+
 
 app.get('/processCall', function(req, res) {
   //debugger
@@ -349,6 +358,8 @@ app.get('/processCall', function(req, res) {
                                   confidence: confidenceAggregate,
                                   indexReference: indexReference
                                 }, function(err, numberAffected, rawResponse) {
+                                  // BUGFIX: send alert to client when we have obtained a recording
+                                  //socket.emit('onComplete',{action:"callProcessed"});
                                   console.log("Processed")
                                 })
                                 //
@@ -464,6 +475,6 @@ app.post('/twilioVoice', function(req, res) {
   })
 })
 
-app.listen(port, function() {
+http.listen(port, function() {
   console.log('Listening on port: ' + port)
 })
