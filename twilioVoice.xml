@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
-    <Say voice="woman">Hello. Please tell us how you are feeling today!</Say>
+    <Say voice="woman">Hello. Welcome to HPE Discover. As part of the demo, please tell us how you are feeling today! Then simply hang up to continue the demo. Thank you.</Say>
     <Record maxLength="120"/>
 </Response>
