@@ -3,6 +3,8 @@
 ## About this app
 ### Overview
   Haven OnDemand offers advanced machine learning APIs for developers to connect, extract, index, analyze, and predict data. Combining these powerful APIs with Twilio's telephone calling services, businesses can extract key insights and metrics from call center recordings to better drive business strategy, marketing, and sales.
+  
+  This Application has been modified for the Stackato booth demo at HPE Discover 2016
 ### How to use
 1. Click on the Make a call link at the top.
 1. Input your telephone number with the full country code and area code (i.e. **+15164505983** don't forget the '+').
@@ -14,6 +16,12 @@
 1. Once it's done processing, click on the link for the analyzed call.
 1. You can now look at the analytics from the call extracted using Haven OnDemand's machine learning APIs.
 1. The main menu has a list of all of the calls made. From here, you can search through all of the calls using the search bar on the top, and find similar calls of another call using the 'Find Similar' button next to a call, powered by Haven OnDemand's Query Text Index API and Find Similar API..
+
+### How to demo
+1. go through usage scenario above. 
+1. uncomment all lines in index.ejs and index.js below the //BUGFIX comment
+1. Push code  to repo
+1. wait for rebuild and re-deploy, then repeat scenario above, and note that the changes (socket based event pushes that cause page refreshes) have taken place. 
 
 ### Technologies used
 * [Haven OnDemand's Speech Recogntion API](https://dev.havenondemand.com/apis/recognizespeech)
